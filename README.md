@@ -60,7 +60,7 @@ function MyCarousel() {
 | `startingItem`          | `number`                             | `0`                                             | Initial active item index (0-based)                                                                                                                         |
 | `loop`                  | `boolean`                            | `true`                                          | Enable infinite looping mode                                                                                                                                |
 | `autoPlay`              | `number` \| `object` \| `true`       | `undefined`                                     | Auto-rotation configuration                                                                                                                                 |
-| `cssStyle`              | `Record<string, string>`             | `{}`                                            | Custom CSS variables/styling for container and items                                                                                                        |
+| `cssStyle`              | `Record<string, string>`             | `{}`                                            | Custom CSS variables/styling for the main container ".caroussel-container"                                                                                  |
 | `changeItemOnClick`     | `boolean`                            | `true`                                          | Enable item selection when clicked                                                                                                                          |
 | `swipeThreshold`        | `number`                             | `50`                                            | Minimum swipe distance (pixels) to trigger navigation                                                                                                       |
 | `axis`                  | `"horizontal"` \| `"vertical"`       | `"horizontal"`                                  | Carousel and and swipe orientation (you should handle transformation in you css accordingly)                                                                |
@@ -183,7 +183,13 @@ Look at the provided css style for example on how to set up you own animation.
 
 ## Reserved CSS variable
 
-The Component rely on some default CSS that's internally loaded. You shouldn't overide anything defined in this file.
+The component relies on some default CSS that you need to include in your code.
+
+```jsx
+import "react-carouzef/base";
+```
+
+Alternatively you can import your own stylesheet, but if you're going to, you may want to have a look at the content of `react-carouzef/base` :
 
 ```css
 .carousel-container {
@@ -229,6 +235,7 @@ They can be imported using :
 import "react-carouzef/css/default";
 //Note that there is no .css extension.
 ```
+Some of them have CSS Variable you can interact with using the cssStyle props !
 
 ## react-carousef/css/default
 
