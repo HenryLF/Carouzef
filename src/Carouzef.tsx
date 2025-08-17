@@ -24,7 +24,6 @@ import {
   useNavigation,
 } from "./utils";
 
-import "./carouzef.css";
 
 type CarouzefState = {
   index: number;
@@ -33,7 +32,7 @@ type CarouzefState = {
   itemsPerView: number;
   loop: boolean;
 };
-interface CarouzefContext extends CarouzefState {
+export interface CarouzefContext extends CarouzefState {
   incrementIndex: (n: number) => void;
   setIndex: (n: number) => void;
 }
@@ -43,7 +42,7 @@ export function useCarouzef() {
   return useContext(CarouzefContextComp);
 }
 
-interface ItemContext {
+export interface ItemContext {
   index: number;
   activeIndex: number;
   toActiveIndex: number;
@@ -87,7 +86,7 @@ function reducerFunction(prevState: CarouzefState, { type, arg }: Action) {
   }
 }
 
-interface CarouzefPropType extends PropsWithChildren {
+export interface CarouzefProps extends PropsWithChildren {
   itemsPerView?: number;
   startingItem?: number;
   loop?: boolean;
@@ -120,7 +119,7 @@ export function Carouzef({
   keyboardEventThrottle = 500,
   keyboardNavigation = { ArrowLeft: "previous", ArrowRight: "next" },
   axis = "horizontal",
-}: CarouzefPropType) {
+}: CarouzefProps) {
   const [itemArray, activeChilds, inactiveChilds] = useMemo(() => {
     const { activeChilds, inactiveChilds } = filterChildren(
       children,
@@ -229,13 +228,13 @@ export function Carouzef({
   );
 }
 
-interface ItemPropType extends PropsWithChildren {
+interface ItemProps extends PropsWithChildren {
   index: number;
   changeItemOnClick: boolean;
   axis: "vertical" | "horizontal";
 }
 
-function Item({ children, index, changeItemOnClick, axis }: ItemPropType) {
+function Item({ children, index, changeItemOnClick, axis }: ItemProps) {
   const mainContext = useCarouzef();
   if (!mainContext) return children;
   const toActiveIndex = indexDistance(

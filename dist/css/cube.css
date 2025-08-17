@@ -1,0 +1,52 @@
+.carousel-container {
+  /*container sizing, adapt to your use case*/
+  flex: 1;
+
+  /* custom variable , interactive through cssVariable prop*/
+  --translate-z: 150px;
+  --translate-x: 200px;
+  --perspective: 1500px;
+  perspective: var(--perspective);
+  transform-style: preserve-3d;
+}
+
+.carousel-item {
+  /*item-carousel layout, adapt to your use case*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /*transitions*/
+  backface-visibility: hidden;
+  transition-property: transform;
+  transition-duration: 500ms;
+  transition-delay: 100ms;
+  transition-timing-function: ease-in-out;
+
+  /*transform*/
+  z-index: calc(var(--item-per-view) * 2 - abs(var(--distance-to-active)));
+}
+
+/* Classes for the items imediatly previous and after
+ the active item */
+.carousel-item-next {
+  transform: rotateY(90deg) translateZ(var(--translate-z))
+    translateX(var(--translate-x)) scale(0.85);
+}
+.carousel-item-prev {
+  transform: rotateY(-90deg) translateZ(var(--translate-z))
+    translateX(calc(-1 * var(--translate-x))) scale(0.85);
+}
+
+/* Classes for  items previous and after the active 
+ item (but not the previous and next ones) */
+/* .carousel-item-before,
+.carousel-item-after{
+} */
+
+/*Class for item outside the view port*/
+.carousel-item-after,
+.carousel-item-before,
+.carousel-item-hidden {
+  display: none;
+}

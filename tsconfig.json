@@ -1,21 +1,28 @@
 {
-    "compilerOptions": {
-        "outDir": "dist",
-        "module": "ESNext",
-        "target": "ES6",
-        "lib": [
-            "DOM",
-            "ESNext"
-        ],
-        "jsx": "react-jsx",
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "strict": true,
-        "esModuleInterop": true,
-        "moduleResolution": "node"
-    },
-    "include": [
-        "src"
-    ]
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "ESNext",
+    "target": "ES6",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "baseUrl": ".",
+    "rootDir": "src",
+    "paths": {
+      "carouzef/css": [
+        "./src/css"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
 }

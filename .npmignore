@@ -1,10 +1,7 @@
-src/
-demo/
-node_modules/
-tsconfig.json
 *.tsbuildinfo
 *.log
-*.md
+tsconfig.json
+.gitignore
 
 # Only include built files
 !dist/

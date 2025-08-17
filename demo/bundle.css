@@ -1,24 +1,4 @@
-/* carouzef.css */
-.carousel-container {
-  --items-per-view: 3;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: clip;
-}
-.carousel-item {
-  --distance-to-active: 0;
-  --item-index: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  --width: calc(100% / var(--items-per-view));
-  --height: calc(100% / var(--items-per-view));
-  width: var(--width);
-  height: var(--height);
-}
-
-/* css/default.css */
+/* src/css/default.css */
 .carousel-container {
   flex: 1;
   --spin: 360deg;
@@ -36,4 +16,24 @@
 }
 .carousel-item-hidden {
   display: none;
+}
+
+/* src/base.css */
+.carousel-container {
+  --items-per-view: 3;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: clip;
+}
+.carousel-item {
+  --distance-to-active: 0;
+  --item-index: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  --width: calc(100% / var(--items-per-view));
+  --height: calc(100% / var(--items-per-view));
+  width: var(--width);
+  height: var(--height);
 }

@@ -1,34 +1,44 @@
 {
-  "name": "carouzef",
-  "version": "1.0.0",
-  "description": "A simple css oriented carousel component for React",
+  "name": "react-carouzef",
+  "version": "1.0.1",
+  "description": "A simple CSS-oriented carousel component for React",
   "main": "dist/index.js",
-  "module": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./css": "./dist/css/*.css"
-  },
-  "scripts": {
-    "build:demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js",
-    "build": "tsc &&  cpx src/**/*.{css} dist/",
-    "prepack": "npm run build"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "react": "^19.1.1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HenryLF/Carouzef.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./base": "./dist/base.css",
+    "./css/*": "./dist/css/*.css"
+  },
+  "scripts": {
+    "demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js",
+    "build": "npm run clean && npm run build:ts && npm run build:css && npm run build:types",
+    "build:ts": "node esbuild.config.cjs",
+    "build:css": "cpx 'src/**/*.css' dist/",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist && tsc-alias",
+    "clean": "rm -rf dist/*",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "cpx": "^1.5.0",
     "esbuild": "^0.25.9",
+    "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.9.2"
   },
   "files": [

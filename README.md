@@ -29,7 +29,10 @@ yarn add carouzef
 
 ```jsx
 import { Carouzef } from "carouzef";
-import "sphere.css"; // Import your css
+import "carouzef/base"
+import "carouzef/sphere.css"; // Import some css animation
+/* // or use your own
+import "./myCustomAnimation.css"*/
 
 function MyCarousel() {
   return (

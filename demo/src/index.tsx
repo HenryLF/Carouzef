@@ -1,7 +1,8 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom/client";
 import { Carouzef } from "../../src/Carouzef";
-import "../../css/default.css";
+import "../../src/css/default.css";
+import "../../src/base.css";
 
 function App() {
   const divStyle: CSSProperties = {

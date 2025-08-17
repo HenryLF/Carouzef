@@ -1,0 +1,21 @@
+.carousel-container {
+  --items-per-view: 3; /*default value*/
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: clip;
+
+  flex: 1;
+}
+
+.carousel-item {
+  --distance-to-active: 0; /*default value*/
+  --item-index: 0; /*default value*/
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  --width: calc(100% / var(--items-per-view));
+  --height: calc(100% / var(--items-per-view));
+  width: var(--width);
+  height: var(--height);
+}
