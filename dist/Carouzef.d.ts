@@ -31,7 +31,7 @@ export interface CarouzefProps extends PropsWithChildren {
     swipeThreshold?: number;
     axis?: "horizontal" | "vertical";
 }
-interface AutoPlayConfig {
+export interface AutoPlayConfig {
     interval: number;
     step?: number;
 }

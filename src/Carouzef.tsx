@@ -48,6 +48,7 @@ export interface ItemContext {
   toActiveIndex: number;
   position: ItemPosition;
 }
+
 const ItemContextComp = createContext<ItemContext | null>(null);
 export function useCarouzefItem() {
   return useContext(ItemContextComp);
@@ -98,7 +99,7 @@ export interface CarouzefProps extends PropsWithChildren {
   swipeThreshold?: number;
   axis?: "horizontal" | "vertical";
 }
-interface AutoPlayConfig {
+export interface AutoPlayConfig {
   interval: number;
   step?: number;
 }
@@ -159,7 +160,6 @@ export function Carouzef({
     ...cssStyle,
   } as CSSProperties;
 
-  console.log(style);
   const setIndex = useCallback(
     (arg: number) => setValue({ type: ActionType.SET, arg }),
     []
