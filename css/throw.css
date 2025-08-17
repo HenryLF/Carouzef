@@ -1,0 +1,72 @@
+.carousel-container {
+  /*Base style and variable, do not remove*/
+  --items-per-view: 3;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: clip;
+
+  /*container sizing, adapt to your use case*/
+  flex: 1;
+
+  /* custom variable , interactive through cssVariable prop*/
+  --spin: 360deg;
+  --scale: .85;
+  --translateX: 85%;
+  --translateY: -50%;
+}
+
+.carousel-item {
+  /*Base style and variable, do not remove*/
+  --distance-to-active: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  --width: calc(100% / var(--items-per-view));
+  width: var(--width);
+
+  /*item-carousel layout, adapt to your use case*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /*transitions*/
+  backface-visibility: hidden;
+  transition-property: transform;
+  transition-duration: 500ms;
+  transition-delay: 100ms;
+  transition-timing-function: ease-in-out;
+
+  /*transform*/
+
+  --sp: calc(
+    var(--spin) * var(--distance-to-active) * var(--distance-to-active) /
+      abs(var(--distance-to-active))
+  );
+  --sc: calc(pow(var(--scale), abs(var(--distance-to-active))));
+  --tX: calc(var(--translateX) * var(--distance-to-active));
+  --tY: calc(var(--translateY) * var(--distance-to-active));
+
+  /*transform*/
+  z-index: calc(var(--items-per-view) * 2 - abs(var(--distance-to-active)));
+  transform: translateX(var(--tX)) translateY(var(--tY)) rotateZ(var(--sp))
+    scale(var(--sc));
+}
+
+/* Classes for the items imediatly previous and after
+ the active item */
+/* .carousel-item-next {
+ }
+.carousel-item-prev {
+ } */
+
+/* Classes for  items previous and after the active 
+ item (but not the previous and next ones) */
+/* .carousel-item-before,
+.carousel-item-after{
+} */
+
+/*Class for item outside the view port*/
+.carousel-item-hidden {
+  display: none;
+}

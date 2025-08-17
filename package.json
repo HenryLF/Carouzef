@@ -1,0 +1,11 @@
+{
+  "name": "carouzef",
+  "version": "1.0.0",
+  "description": "a simple css oriented carousel component for React",
+  "main": "Carouzef.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
