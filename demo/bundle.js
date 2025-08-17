@@ -19382,14 +19382,41 @@
     }
     return "after" /* AFTER */;
   }
-  function useSwipeDirection({
+  function throttle(func, limit) {
+    let inThrottle = false;
+    return function(...args) {
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+  function useNavigation({
     onSwipeLeft,
     onSwipeRight,
-    swipeThreshold
+    onSwipeUp,
+    onSwipeDown,
+    onKeysUp: keyboardNavigation,
+    swipeThreshold,
+    keyboardEventThrottle
   }) {
     const touchStart = (0, import_react.useRef)(null);
     const touchEnd = (0, import_react.useRef)(null);
     const threshold = swipeThreshold;
+    const onKeyUp = (ev) => {
+      for (let key in keyboardNavigation) {
+        if (ev.key == key) {
+          keyboardNavigation[key]();
+        }
+      }
+    };
+    (0, import_react.useEffect)(() => {
+      const handle = throttle(onKeyUp, keyboardEventThrottle);
+      window.addEventListener("keyup", handle);
+      return () => window.removeEventListener("keyup", handle);
+    }, []);
     const onTouchStart = (e) => {
       touchEnd.current = e.nativeEvent.targetTouches[0];
       touchStart.current = e.nativeEvent.targetTouches[0];
@@ -19397,12 +19424,19 @@
     const onTouchMove = (e) => touchEnd.current = e.nativeEvent.targetTouches[0];
     const onTouchEnd = () => {
       if (!touchStart.current || !touchEnd.current) return;
-      const distanceX = touchStart.current.clientX - touchEnd.current.clientX;
+      const distanceX = touchEnd.current.clientX - touchStart.current.clientX;
+      const distanceY = touchEnd.current.clientY - touchStart.current.clientY;
       if (distanceX > threshold) {
         onSwipeRight();
       }
       if (distanceX < -threshold) {
         onSwipeLeft();
+      }
+      if (distanceY > threshold) {
+        onSwipeDown();
+      }
+      if (distanceY < -threshold) {
+        onSwipeUp();
       }
     };
     return {
@@ -19454,12 +19488,15 @@
     autoPlay,
     cssStyle,
     changeItemOnClick = true,
-    swipeThreshold = 50
+    swipeThreshold = 50,
+    keyboardEventThrottle = 500,
+    keyboardNavigation = { ArrowLeft: "previous", ArrowRight: "next" },
+    axis = "horizontal"
   }) {
     const [itemArray, activeChilds, inactiveChilds] = (0, import_react3.useMemo)(() => {
       const { activeChilds: activeChilds2, inactiveChilds: inactiveChilds2 } = filterChildren(
         children,
-        "Carouzef-ignore"
+        "carouzef-ignore"
       );
       return [
         duplicateChildren(activeChilds2, itemsPerView),
@@ -19487,6 +19524,11 @@
           Object.assign(autoPlayConfig, autoPlay);
       }
     }
+    const style = {
+      "--items-per-view": itemsPerView,
+      ...cssStyle
+    };
+    console.log(style);
     const setIndex = (0, import_react3.useCallback)(
       (arg) => setValue({ type: "set_index" /* SET */, arg }),
       []
@@ -19496,10 +19538,27 @@
       []
     );
     const [value, setValue] = (0, import_react3.useReducer)(reducerFunction, initialState);
-    const swipeHandles = useSwipeDirection({
-      onSwipeLeft: () => incrementIndex(1),
-      onSwipeRight: () => incrementIndex(-1),
-      swipeThreshold
+    const verticalAxis = axis == "vertical";
+    const onKeysUp = {};
+    for (let key in keyboardNavigation) {
+      if (keyboardNavigation[key] == "next") {
+        onKeysUp[key] = () => incrementIndex(1);
+      } else {
+        onKeysUp[key] = () => incrementIndex(-1);
+      }
+    }
+    const navigationHandles = useNavigation({
+      onSwipeLeft: !verticalAxis ? () => incrementIndex(1) : () => {
+      },
+      onSwipeRight: !verticalAxis ? () => incrementIndex(-1) : () => {
+      },
+      onSwipeUp: verticalAxis ? () => incrementIndex(1) : () => {
+      },
+      onSwipeDown: verticalAxis ? () => incrementIndex(-1) : () => {
+      },
+      onKeysUp,
+      swipeThreshold,
+      keyboardEventThrottle
     });
     (0, import_react3.useEffect)(() => {
       const cleanUp = [() => {
@@ -19515,28 +19574,29 @@
       }
       return () => cleanUp.forEach((e) => e());
     }, [autoPlay]);
-    return /* @__PURE__ */ import_react2.default.createElement(
-      "div",
+    return /* @__PURE__ */ import_react2.default.createElement("div", { style, ...navigationHandles, className: "carousel-container" }, /* @__PURE__ */ import_react2.default.createElement(
+      CarouzefContextComp.Provider,
       {
-        style: { "--items-per-view": itemsPerView, ...cssStyle },
-        ...swipeHandles,
-        className: "carousel-container"
+        value: {
+          setIndex,
+          incrementIndex,
+          ...value
+        }
       },
-      /* @__PURE__ */ import_react2.default.createElement(
-        CarouzefContextComp.Provider,
+      import_react3.Children.map(itemArray, (child, id) => /* @__PURE__ */ import_react2.default.createElement(
+        Item,
         {
-          value: {
-            setIndex,
-            incrementIndex,
-            ...value
-          }
+          key: id,
+          index: id,
+          changeItemOnClick,
+          axis
         },
-        import_react3.Children.map(itemArray, (child, id) => /* @__PURE__ */ import_react2.default.createElement(Item, { key: id, index: id, changeItemOnClick }, child)),
-        inactiveChilds
-      )
-    );
+        child
+      )),
+      inactiveChilds
+    ));
   }
-  function Item({ children, index, changeItemOnClick }) {
+  function Item({ children, index, changeItemOnClick, axis }) {
     const mainContext = useCarouzef();
     if (!mainContext) return children;
     const toActiveIndex = indexDistance(
@@ -19545,9 +19605,16 @@
       mainContext.numberOfItems,
       mainContext.loop
     );
+    const cssSize = {};
+    if (axis == "horizontal") {
+      cssSize["height"] = "auto";
+    } else {
+      cssSize["width"] = "auto";
+    }
     const style = {
       "--item-index": `${index}`,
-      "--distance-to-active": `${toActiveIndex}`
+      "--distance-to-active": `${toActiveIndex}`,
+      ...cssSize
     };
     if ((0, import_react3.isValidElement)(children)) {
       const childStyle = children.props.cssStyle;
@@ -19607,7 +19674,18 @@
           height: "100vh"
         }
       },
-      /* @__PURE__ */ import_react4.default.createElement(Carouzef, { itemsPerView: 3, autoPlay: true }, /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "green" } }, "1"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "blue" } }, "2"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "orange" } }, "3"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "purple" } }, "4"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "yellow" } }, "5"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "red" } }, "6"))
+      /* @__PURE__ */ import_react4.default.createElement(
+        Carouzef,
+        {
+          itemsPerView: 3
+        },
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "green" } }, "1"),
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "blue" } }, "2"),
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "orange" } }, "3"),
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "purple" } }, "4"),
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "yellow" } }, "5"),
+        /* @__PURE__ */ import_react4.default.createElement("div", { style: { ...divStyle, backgroundColor: "red" } }, "6")
+      )
     );
   }
   var root = import_client.default.createRoot(document.getElementById("root"));

@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom/client";
 import { Carouzef } from "../../Carouzef";
-import "../../css/sphere.css"
+import "../../css/default.css";
 
 function App() {
   const divStyle: CSSProperties = {
@@ -24,7 +24,9 @@ function App() {
         height: "100vh",
       }}
     >
-      <Carouzef itemsPerView={3} autoPlay={true}>
+      <Carouzef
+        itemsPerView={3}
+      >
         <div style={{ ...divStyle, backgroundColor: "green" }}>1</div>
         <div style={{ ...divStyle, backgroundColor: "blue" }}>2</div>
         <div style={{ ...divStyle, backgroundColor: "orange" }}>3</div>

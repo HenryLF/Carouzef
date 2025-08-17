@@ -21,7 +21,7 @@ import {
   incrementIndexSafe,
   indexDistance,
   ItemPosition,
-  useSwipeDirection,
+  useNavigation,
 } from "./utils";
 
 import "./carouzef.css";
@@ -94,7 +94,10 @@ interface CarouzefPropType extends PropsWithChildren {
   autoPlay?: number | AutoPlayConfig | true;
   cssStyle?: Record<string, string>;
   changeItemOnClick?: boolean;
+  keyboardNavigation?: Record<string, "next" | "previous">;
+  keyboardEventThrottle?: number;
   swipeThreshold?: number;
+  axis?: "horizontal" | "vertical";
 }
 interface AutoPlayConfig {
   interval: number;
@@ -114,11 +117,14 @@ export function Carouzef({
   cssStyle,
   changeItemOnClick = true,
   swipeThreshold = 50,
+  keyboardEventThrottle = 500,
+  keyboardNavigation = { ArrowLeft: "previous", ArrowRight: "next" },
+  axis = "horizontal",
 }: CarouzefPropType) {
   const [itemArray, activeChilds, inactiveChilds] = useMemo(() => {
     const { activeChilds, inactiveChilds } = filterChildren(
       children,
-      "Carouzef-ignore"
+      "carouzef-ignore"
     );
     return [
       duplicateChildren(activeChilds, itemsPerView),
@@ -149,6 +155,12 @@ export function Carouzef({
     }
   }
 
+  const style = {
+    "--items-per-view": itemsPerView,
+    ...cssStyle,
+  } as CSSProperties;
+
+  console.log(style);
   const setIndex = useCallback(
     (arg: number) => setValue({ type: ActionType.SET, arg }),
     []
@@ -159,10 +171,24 @@ export function Carouzef({
   );
 
   const [value, setValue] = useReducer(reducerFunction, initialState);
-  const swipeHandles = useSwipeDirection({
-    onSwipeLeft: () => incrementIndex(1),
-    onSwipeRight: () => incrementIndex(-1),
+
+  const verticalAxis = axis == "vertical";
+  const onKeysUp: Record<string, () => void> = {};
+  for (let key in keyboardNavigation) {
+    if (keyboardNavigation[key] == "next") {
+      onKeysUp[key] = () => incrementIndex(1);
+    } else {
+      onKeysUp[key] = () => incrementIndex(-1);
+    }
+  }
+  const navigationHandles = useNavigation({
+    onSwipeLeft: !verticalAxis ? () => incrementIndex(1) : () => {},
+    onSwipeRight: !verticalAxis ? () => incrementIndex(-1) : () => {},
+    onSwipeUp: verticalAxis ? () => incrementIndex(1) : () => {},
+    onSwipeDown: verticalAxis ? () => incrementIndex(-1) : () => {},
+    onKeysUp,
     swipeThreshold,
+    keyboardEventThrottle,
   });
 
   useEffect(() => {
@@ -179,11 +205,7 @@ export function Carouzef({
     return () => cleanUp.forEach((e) => e());
   }, [autoPlay]);
   return (
-    <div
-      style={{ "--items-per-view": itemsPerView, ...cssStyle } as CSSProperties}
-      {...swipeHandles}
-      className="carousel-container"
-    >
+    <div style={style} {...navigationHandles} className="carousel-container">
       <CarouzefContextComp.Provider
         value={{
           setIndex,
@@ -192,7 +214,12 @@ export function Carouzef({
         }}
       >
         {Children.map(itemArray, (child, id) => (
-          <Item key={id} index={id} changeItemOnClick={changeItemOnClick}>
+          <Item
+            key={id}
+            index={id}
+            changeItemOnClick={changeItemOnClick}
+            axis={axis}
+          >
             {child}
           </Item>
         ))}
@@ -205,9 +232,10 @@ export function Carouzef({
 interface ItemPropType extends PropsWithChildren {
   index: number;
   changeItemOnClick: boolean;
+  axis: "vertical" | "horizontal";
 }
 
-function Item({ children, index, changeItemOnClick }: ItemPropType) {
+function Item({ children, index, changeItemOnClick, axis }: ItemPropType) {
   const mainContext = useCarouzef();
   if (!mainContext) return children;
   const toActiveIndex = indexDistance(
@@ -216,9 +244,17 @@ function Item({ children, index, changeItemOnClick }: ItemPropType) {
     mainContext.numberOfItems,
     mainContext.loop
   );
+
+  const cssSize: Record<string, string> = {};
+  if (axis == "horizontal") {
+    cssSize["height"] = "auto";
+  } else {
+    cssSize["width"] = "auto";
+  }
   const style = {
     "--item-index": `${index}`,
     "--distance-to-active": `${toActiveIndex}`,
+    ...cssSize,
   } as CSSProperties;
 
   if (isValidElement(children)) {

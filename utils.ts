@@ -5,6 +5,7 @@ import {
   ReactNode,
   useRef,
   TouchEvent,
+  useEffect,
 } from "react";
 
 export function incrementIndexSafe(
@@ -97,21 +98,58 @@ export function getItemPosition(distance: number, perView: number) {
   return ItemPosition.AFTER;
 }
 
-interface SwipeMotionOptions {
+function throttle<T extends unknown[]>(
+  func: (...args: T) => void,
+  limit: number
+): (...args: T) => void {
+  let inThrottle: boolean = false;
+  return function (...args: T): void {
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+}
+
+interface NavigationOptions {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
+  onSwipeUp: () => void;
+  onSwipeDown: () => void;
+  onKeysUp: Record<string, () => void>;
+  keyboardEventThrottle: number;
   swipeThreshold: number;
 }
 
-export function useSwipeDirection({
+export function useNavigation({
   onSwipeLeft,
   onSwipeRight,
+  onSwipeUp,
+  onSwipeDown,
+  onKeysUp: keyboardNavigation,
   swipeThreshold,
-}: SwipeMotionOptions) {
+  keyboardEventThrottle,
+}: NavigationOptions) {
   const touchStart = useRef<Touch>(null);
   const touchEnd = useRef<Touch>(null);
 
   const threshold = swipeThreshold;
+
+  const onKeyUp = (ev: KeyboardEvent) => {
+    for (let key in keyboardNavigation) {
+      if (ev.key == key) {
+        keyboardNavigation[key]();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handle = throttle(onKeyUp, keyboardEventThrottle);
+    window.addEventListener("keyup", handle);
+    return () => window.removeEventListener("keyup", handle);
+  }, []);
 
   const onTouchStart = (e: TouchEvent) => {
     touchEnd.current = e.nativeEvent.targetTouches[0];
@@ -123,12 +161,19 @@ export function useSwipeDirection({
 
   const onTouchEnd = () => {
     if (!touchStart.current || !touchEnd.current) return;
-    const distanceX = touchStart.current.clientX - touchEnd.current.clientX;
+    const distanceX = touchEnd.current.clientX - touchStart.current.clientX;
+    const distanceY = touchEnd.current.clientY - touchStart.current.clientY;
     if (distanceX > threshold) {
       onSwipeRight();
     }
     if (distanceX < -threshold) {
       onSwipeLeft();
+    }
+    if (distanceY > threshold) {
+      onSwipeDown();
+    }
+    if (distanceY < -threshold) {
+      onSwipeUp();
     }
   };
 
