@@ -1,6 +1,6 @@
 {
   "name": "react-carouzef",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "A simple CSS-oriented carousel component for React",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
