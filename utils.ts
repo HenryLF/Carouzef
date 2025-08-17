@@ -59,10 +59,10 @@ export function filterChildren(children: ReactNode, filter: string) {
 export function duplicateChildren(children: ReactNode, itemsPerView: number) {
   const count = Children.count(children);
   if (!count) return [];
-  
+
   let childArray = Children.toArray(children);
   const minItems = Math.max(itemsPerView * 2, 3); // More robust minimum
-  
+
   while (childArray.length < minItems) {
     childArray = [...childArray, ...childArray.slice(0, count)];
   }
@@ -97,24 +97,20 @@ export function getItemPosition(distance: number, perView: number) {
 }
 
 interface SwipeMotionOptions {
-  onSwipeLeft?: () => void;
-  onSwipeRight?: () => void;
-  swipeThreshold?: number ;
+  onSwipeLeft: () => void;
+  onSwipeRight: () => void;
+  swipeThreshold: number;
 }
 
-
-function maybeCall(func: CallableFunction | undefined | null) {
-  if (func) {
-    return func();
-  }
-}
-
-
-export function useSwipeDirection(options: SwipeMotionOptions) {
+export function useSwipeDirection({
+  onSwipeLeft,
+  onSwipeRight,
+  swipeThreshold,
+}: SwipeMotionOptions) {
   const touchStart = useRef<Touch>(null);
   const touchEnd = useRef<Touch>(null);
 
-  const threshold = options.swipeThreshold ?? 50;
+  const threshold = swipeThreshold;
 
   const onTouchStart = (e: TouchEvent) => {
     touchEnd.current = e.targetTouches[0];
@@ -127,11 +123,11 @@ export function useSwipeDirection(options: SwipeMotionOptions) {
   const onTouchEnd = () => {
     if (!touchStart.current || !touchEnd.current) return;
     const distanceX = touchStart.current.clientX - touchEnd.current.clientX;
-    if (distanceY > swipeThreshold.vertical) {
-      maybeCall(options.onSwipeUp);
+    if (distanceX > threshold) {
+      onSwipeRight();
     }
-    if (distanceY < -swipeThreshold.vertical) {
-      maybeCall(options.onSwipeDown);
+    if (distanceX < -threshold) {
+      onSwipeLeft();
     }
   };
 
@@ -141,4 +137,3 @@ export function useSwipeDirection(options: SwipeMotionOptions) {
     onTouchEnd,
   };
 }
-

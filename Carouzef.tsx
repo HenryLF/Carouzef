@@ -19,8 +19,8 @@ import {
   incrementIndexSafe,
   indexDistance,
   ItemPosition,
+  useSwipeDirection,
 } from "./utils";
-import { useSwipeDirection } from "@/hooks/useSwipeMotion";
 
 type CarouselState = {
   index: number;
@@ -156,6 +156,7 @@ export function Carousel({
   const swipeHandle = useSwipeDirection({
     onSwipeLeft: () => incrementIndex(1),
     onSwipeRight: () => incrementIndex(-1),
+    swipeThreshold: 50,
   });
 
   useEffect(() => {
