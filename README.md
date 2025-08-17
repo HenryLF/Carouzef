@@ -2,7 +2,7 @@
 
 ![Carouzef Preview](gif/default.gif)
 
-If you kwnow CSS and don't want or **need** to go through the hassle of setting up
+If you kwnow CSS and don't want or **need** to go through the hassle of setting up Swiper.js.
 
 ## Features
 
@@ -18,9 +18,9 @@ If you kwnow CSS and don't want or **need** to go through the hassle of setting 
 ## Installation
 
 ```bash
-npm install carouzef
+npm install react-carouzef
 # or
-yarn add carouzef
+yarn add react-carouzef
 ```
 
 ## Usage
@@ -28,9 +28,9 @@ yarn add carouzef
 ### Basic Implementation
 
 ```jsx
-import { Carouzef } from "carouzef";
-import "carouzef/base"
-import "carouzef/sphere.css"; // Import some css animation
+import { Carouzef } from "react-carouzef";
+import "react-carouzef/base";
+import "react-carouzef/css/sphere"; // Import some css animation
 /* // or use your own
 import "./myCustomAnimation.css"*/
 
@@ -218,7 +218,6 @@ Add items that shouldn't be part of the carousel flow by including the `carousel
   <div>Carousel Item 2</div>
 </Carouzef>
 ```
-
 
 ## License
 
