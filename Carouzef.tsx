@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Children,
   createContext,
@@ -22,21 +24,23 @@ import {
   useSwipeDirection,
 } from "./utils";
 
-type CarouselState = {
+import "./carouzef.css";
+
+type CarouzefState = {
   index: number;
   numberOfItems: number;
   realNumberOfItems: number;
   itemsPerView: number;
   loop: boolean;
 };
-interface CarouselContext extends CarouselState {
+interface CarouzefContext extends CarouzefState {
   incrementIndex: (n: number) => void;
   setIndex: (n: number) => void;
 }
 
-const CarouselContextComp = createContext<CarouselContext | null>(null);
-export function useCarousel() {
-  return useContext(CarouselContextComp);
+const CarouzefContextComp = createContext<CarouzefContext | null>(null);
+export function useCarouzef() {
+  return useContext(CarouzefContextComp);
 }
 
 interface ItemContext {
@@ -46,7 +50,7 @@ interface ItemContext {
   position: ItemPosition;
 }
 const ItemContextComp = createContext<ItemContext | null>(null);
-export function useCarouselItem() {
+export function useCarouzefItem() {
   return useContext(ItemContextComp);
 }
 enum ActionType {
@@ -57,7 +61,7 @@ type Action = {
   type: ActionType;
   arg: number;
 };
-function reducerFunction(prevState: CarouselState, { type, arg }: Action) {
+function reducerFunction(prevState: CarouzefState, { type, arg }: Action) {
   let index: number;
   switch (type) {
     case ActionType.INCR:
@@ -83,13 +87,14 @@ function reducerFunction(prevState: CarouselState, { type, arg }: Action) {
   }
 }
 
-interface CarouselPropType extends PropsWithChildren {
+interface CarouzefPropType extends PropsWithChildren {
   itemsPerView?: number;
   startingItem?: number;
   loop?: boolean;
   autoPlay?: number | AutoPlayConfig | true;
   cssStyle?: Record<string, string>;
   changeItemOnClick?: boolean;
+  swipeThreshold?: number;
 }
 interface AutoPlayConfig {
   interval: number;
@@ -100,7 +105,7 @@ const defaultAutoPlayConfig: AutoPlayConfig = {
   step: 1,
 };
 
-export function Carousel({
+export function Carouzef({
   children,
   startingItem = 0,
   itemsPerView = 2,
@@ -108,11 +113,12 @@ export function Carousel({
   autoPlay,
   cssStyle,
   changeItemOnClick = true,
-}: CarouselPropType) {
+  swipeThreshold = 50,
+}: CarouzefPropType) {
   const [itemArray, activeChilds, inactiveChilds] = useMemo(() => {
     const { activeChilds, inactiveChilds } = filterChildren(
       children,
-      "carousel-ignore"
+      "Carouzef-ignore"
     );
     return [
       duplicateChildren(activeChilds, itemsPerView),
@@ -122,7 +128,7 @@ export function Carousel({
   }, [children, itemsPerView]);
 
   const numberOfItems = Children.count(itemArray);
-  const initialState: CarouselState = {
+  const initialState: CarouzefState = {
     index: getIndexSafe(startingItem, numberOfItems, loop),
     itemsPerView: itemsPerView,
     numberOfItems,
@@ -153,10 +159,10 @@ export function Carousel({
   );
 
   const [value, setValue] = useReducer(reducerFunction, initialState);
-  const swipeHandle = useSwipeDirection({
+  const swipeHandles = useSwipeDirection({
     onSwipeLeft: () => incrementIndex(1),
     onSwipeRight: () => incrementIndex(-1),
-    swipeThreshold: 50,
+    swipeThreshold,
   });
 
   useEffect(() => {
@@ -174,13 +180,11 @@ export function Carousel({
   }, [autoPlay]);
   return (
     <div
-      style={
-        { "--items-per-view ": itemsPerView, ...cssStyle } as CSSProperties
-      }
-      {...swipeHandle}
+      style={{ "--items-per-view": itemsPerView, ...cssStyle } as CSSProperties}
+      {...swipeHandles}
       className="carousel-container"
     >
-      <CarouselContextComp.Provider
+      <CarouzefContextComp.Provider
         value={{
           setIndex,
           incrementIndex,
@@ -193,7 +197,7 @@ export function Carousel({
           </Item>
         ))}
         {inactiveChilds}
-      </CarouselContextComp.Provider>
+      </CarouzefContextComp.Provider>
     </div>
   );
 }
@@ -204,7 +208,7 @@ interface ItemPropType extends PropsWithChildren {
 }
 
 function Item({ children, index, changeItemOnClick }: ItemPropType) {
-  const mainContext = useCarousel();
+  const mainContext = useCarouzef();
   if (!mainContext) return children;
   const toActiveIndex = indexDistance(
     index,

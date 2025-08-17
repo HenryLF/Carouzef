@@ -4,7 +4,7 @@
   "description": "A simple css oriented carousel component for React",
   "main": "Carouzef.tsx",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +12,9 @@
     "react": "^19.1.1"
   },
   "devDependencies": {
-    "@types/react": "^19.1.10"
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "esbuild": "^0.25.9",
+    "react-dom": "^19.1.1"
   }
 }

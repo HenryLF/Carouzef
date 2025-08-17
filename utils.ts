@@ -4,6 +4,7 @@ import {
   ReactElement,
   ReactNode,
   useRef,
+  TouchEvent,
 } from "react";
 
 export function incrementIndexSafe(
@@ -113,12 +114,12 @@ export function useSwipeDirection({
   const threshold = swipeThreshold;
 
   const onTouchStart = (e: TouchEvent) => {
-    touchEnd.current = e.targetTouches[0];
-    touchStart.current = e.targetTouches[0];
+    touchEnd.current = e.nativeEvent.targetTouches[0];
+    touchStart.current = e.nativeEvent.targetTouches[0];
   };
 
   const onTouchMove = (e: TouchEvent) =>
-    (touchEnd.current = e.targetTouches[0]);
+    (touchEnd.current = e.nativeEvent.targetTouches[0]);
 
   const onTouchEnd = () => {
     if (!touchStart.current || !touchEnd.current) return;

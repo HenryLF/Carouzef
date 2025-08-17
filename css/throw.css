@@ -1,10 +1,4 @@
 .carousel-container {
-  /*Base style and variable, do not remove*/
-  --items-per-view: 3;
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: clip;
-
   /*container sizing, adapt to your use case*/
   flex: 1;
 
@@ -16,15 +10,6 @@
 }
 
 .carousel-item {
-  /*Base style and variable, do not remove*/
-  --distance-to-active: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  --width: calc(100% / var(--items-per-view));
-  width: var(--width);
-
   /*item-carousel layout, adapt to your use case*/
   display: flex;
   justify-content: center;

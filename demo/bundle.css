@@ -1,0 +1,44 @@
+/* carouzef.css */
+.carousel-container {
+  --items-per-view: 3;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: clip;
+}
+.carousel-item {
+  --distance-to-active: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  --width: calc(100% / var(--items-per-view));
+  width: var(--width);
+}
+
+/* css/sphere.css */
+.carousel-container {
+  flex: 1;
+  --sphere-curvature: 20deg;
+  --sphere-depth: 0.02;
+  --scale-factor: 10;
+  --perspective: 2000vw;
+  transform-style: preserve-3d;
+}
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  transition-property: transform;
+  transition-duration: 800ms;
+  transition-delay: 100ms;
+  transition-timing-function: ease;
+  --rotation: calc(var(--sphere-curvature) * var(--distance-to-active));
+  --depth: calc(var(--sphere-depth) * var(--distance-to-active) * 1px);
+  --scale: calc( (100 - var(--scale-factor) * abs(var(--distance-to-active))) / 100 );
+  transform: rotateY(var(--rotation)) translateZ(calc(-1 * var(--depth))) translateX(calc((100% * var(--distance-to-active)))) scale(var(--scale));
+  z-index: calc(var(--items-per-view) * 2 - abs(var(--distance-to-active)));
+}
+.carousel-item-hidden {
+  display: none;
+}
