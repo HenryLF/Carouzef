@@ -19,7 +19,6 @@
     "./css/*": "./dist/css/*.css"
   },
   "scripts": {
-    "demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js",
     "build": "npm run clean && npm run build:ts && npm run build:css && npm run build:types",
     "build:ts": "node esbuild.config.cjs",
     "build:css": "cpx 'src/**/*.css' dist/",

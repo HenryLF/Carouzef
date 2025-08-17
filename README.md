@@ -2,7 +2,7 @@
 
 ![Carouzef Preview](gif/default.gif)
 
-If you kwnow CSS and don't want or **need** to go through the hassle of setting up Swiper.js.
+If you know CSS and don't want or **need** to go through the hassle of setting up Swiper.js.
 
 ## Features
 
@@ -218,6 +218,35 @@ Add items that shouldn't be part of the carousel flow by including the `carousel
   <div>Carousel Item 2</div>
 </Carouzef>
 ```
+
+# Included styles
+
+Those are the default styles included in the library, feel free to submit you own creation !
+
+They can be imported using :
+
+```jsx
+import "react-carouzef/css/default";
+//Note that there is no .css extension.
+```
+
+## react-carousef/css/default
+
+![Carouzef Default](gif/default.gif)
+
+Another style called defaultVertical is available if you want a vertical axis.
+
+## react-carousef/css/sphere
+
+![Carouzef Sphere](gif/sphere.gif)
+
+## react-carousef/css/cube
+
+![Carouzef Cube](gif/cube.gif)
+
+## react-carousef/css/throw
+
+![Carouzef Throw](gif/throw.gif)
 
 ## License
 

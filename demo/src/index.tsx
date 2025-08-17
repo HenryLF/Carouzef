@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom/client";
-import { Carouzef } from "../../src/Carouzef";
-import "../../src/css/default.css";
-import "../../src/base.css";
+import { Carouzef } from "react-carouzef";
+import "react-carouzef/base";
+import "react-carouzef/css/throw";
 
 function App() {
   const divStyle: CSSProperties = {
@@ -25,7 +25,7 @@ function App() {
         height: "100vh",
       }}
     >
-      <Carouzef itemsPerView={3}>
+      <Carouzef itemsPerView={3} autoPlay={true} cssStyle={{"--translateX" : "100%" , "--translateY" : "0%"}}>
         <div style={{ ...divStyle, backgroundColor: "green" }}>1</div>
         <div style={{ ...divStyle, backgroundColor: "blue" }}>2</div>
         <div style={{ ...divStyle, backgroundColor: "orange" }}>3</div>

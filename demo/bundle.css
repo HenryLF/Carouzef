@@ -1,29 +1,10 @@
-/* src/css/default.css */
-.carousel-container {
-  flex: 1;
-  --spin: 360deg;
-  --scale: 0.85;
-}
-.carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition-property: opacity, transform;
-  transition-duration: 500ms;
-  transition-timing-function: linear;
-  transform: translate(calc(100% * var(--distance-to-active)));
-  z-index: calc(var(--items-per-view) * 2 - abs(var(--distance-to-active)));
-}
-.carousel-item-hidden {
-  display: none;
-}
-
-/* src/base.css */
+/* node_modules/react-carouzef/dist/base.css */
 .carousel-container {
   --items-per-view: 3;
   position: relative;
   overflow-x: hidden;
   overflow-y: clip;
+  flex: 1;
 }
 .carousel-item {
   --distance-to-active: 0;
@@ -36,4 +17,32 @@
   --height: calc(100% / var(--items-per-view));
   width: var(--width);
   height: var(--height);
+}
+
+/* node_modules/react-carouzef/dist/css/throw.css */
+.carousel-container {
+  flex: 1;
+  --spin: 360deg;
+  --scale: .85;
+  --translateX: 85%;
+  --translateY: -50%;
+}
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  transition-property: transform;
+  transition-duration: 500ms;
+  transition-delay: 100ms;
+  transition-timing-function: ease-in-out;
+  --sp: calc( var(--spin) * var(--distance-to-active) * var(--distance-to-active) / abs(var(--distance-to-active)) );
+  --sc: calc(pow(var(--scale), abs(var(--distance-to-active))));
+  --tX: calc(var(--translateX) * var(--distance-to-active));
+  --tY: calc(var(--translateY) * var(--distance-to-active));
+  z-index: calc(var(--items-per-view) * 2 - abs(var(--distance-to-active)));
+  transform: translateX(var(--tX)) translateY(var(--tY)) rotateZ(var(--sp)) scale(var(--sc));
+}
+.carousel-item-hidden {
+  display: none;
 }

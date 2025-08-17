@@ -116,9 +116,9 @@
           }
           return first;
         }
-        function compare(a, b) {
-          var diff = a.sortIndex - b.sortIndex;
-          return 0 !== diff ? diff : a.id - b.id;
+        function compare(a, b2) {
+          var diff = a.sortIndex - b2.sortIndex;
+          return 0 !== diff ? diff : a.id - b2.id;
         }
         function advanceTimers(currentTime) {
           for (var timer = peek(timerQueue); null !== timer; ) {
@@ -456,7 +456,7 @@
           componentName = this.props.ref;
           return void 0 !== componentName ? componentName : null;
         }
-        function ReactElement2(type, key, self, source, owner, props, debugStack, debugTask) {
+        function ReactElement(type, key, self, source, owner, props, debugStack, debugTask) {
           self = props.ref;
           type = {
             $$typeof: REACT_ELEMENT_TYPE,
@@ -498,7 +498,7 @@
           return type;
         }
         function cloneAndReplaceKey(oldElement, newKey) {
-          newKey = ReactElement2(
+          newKey = ReactElement(
             oldElement.type,
             newKey,
             void 0,
@@ -511,7 +511,7 @@
           oldElement._store && (newKey._store.validated = oldElement._store.validated);
           return newKey;
         }
-        function isValidElement3(object) {
+        function isValidElement(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
         function escape(key) {
@@ -582,13 +582,13 @@
             var childKey = "" === nameSoFar ? "." + getElementKey(invokeCallback, 0) : nameSoFar;
             isArrayImpl(callback) ? (escapedPrefix = "", null != childKey && (escapedPrefix = childKey.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function(c) {
               return c;
-            })) : null != callback && (isValidElement3(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(
+            })) : null != callback && (isValidElement(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(
               callback,
               escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(
                 userProvidedKeyEscapeRegex,
                 "$&/"
               ) + "/") + childKey
-            ), "" !== nameSoFar && null != invokeCallback && isValidElement3(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
+            ), "" !== nameSoFar && null != invokeCallback && isValidElement(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
             return 1;
           }
           invokeCallback = 0;
@@ -868,7 +868,7 @@
             }) || [];
           },
           only: function(children) {
-            if (!isValidElement3(children))
+            if (!isValidElement(children))
               throw Error(
                 "React.Children.only expected to receive a single React element child."
               );
@@ -1000,7 +1000,7 @@
               JSCompiler_inline_result[i] = arguments[i + 2];
             props.children = JSCompiler_inline_result;
           }
-          props = ReactElement2(
+          props = ReactElement(
             element.type,
             key,
             void 0,
@@ -1011,7 +1011,7 @@
             element._debugTask
           );
           for (key = 2; key < arguments.length; key++)
-            owner = arguments[key], isValidElement3(owner) && owner._store && (owner._store.validated = 1);
+            owner = arguments[key], isValidElement(owner) && owner._store && (owner._store.validated = 1);
           return props;
         };
         exports.createContext = function(defaultValue) {
@@ -1035,7 +1035,7 @@
         exports.createElement = function(type, config, children) {
           for (var i = 2; i < arguments.length; i++) {
             var node = arguments[i];
-            isValidElement3(node) && node._store && (node._store.validated = 1);
+            isValidElement(node) && node._store && (node._store.validated = 1);
           }
           i = {};
           node = null;
@@ -1060,7 +1060,7 @@
             "function" === typeof type ? type.displayName || type.name || "Unknown" : type
           );
           var propName = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-          return ReactElement2(
+          return ReactElement(
             type,
             node,
             void 0,
@@ -1103,7 +1103,7 @@
           });
           return elementType;
         };
-        exports.isValidElement = isValidElement3;
+        exports.isValidElement = isValidElement;
         exports.lazy = function(ctor) {
           return {
             $$typeof: REACT_LAZY_TYPE,
@@ -1639,14 +1639,14 @@
               throw Error("Unable to find node on an unmounted component.");
             return alternate !== fiber ? null : fiber;
           }
-          for (var a = fiber, b = alternate; ; ) {
+          for (var a = fiber, b2 = alternate; ; ) {
             var parentA = a.return;
             if (null === parentA) break;
             var parentB = parentA.alternate;
             if (null === parentB) {
-              b = parentA.return;
-              if (null !== b) {
-                a = b;
+              b2 = parentA.return;
+              if (null !== b2) {
+                a = b2;
                 continue;
               }
               break;
@@ -1654,23 +1654,23 @@
             if (parentA.child === parentB.child) {
               for (parentB = parentA.child; parentB; ) {
                 if (parentB === a) return assertIsMounted(parentA), fiber;
-                if (parentB === b) return assertIsMounted(parentA), alternate;
+                if (parentB === b2) return assertIsMounted(parentA), alternate;
                 parentB = parentB.sibling;
               }
               throw Error("Unable to find node on an unmounted component.");
             }
-            if (a.return !== b.return) a = parentA, b = parentB;
+            if (a.return !== b2.return) a = parentA, b2 = parentB;
             else {
               for (var didFindChild = false, _child = parentA.child; _child; ) {
                 if (_child === a) {
                   didFindChild = true;
                   a = parentA;
-                  b = parentB;
+                  b2 = parentB;
                   break;
                 }
-                if (_child === b) {
+                if (_child === b2) {
                   didFindChild = true;
-                  b = parentA;
+                  b2 = parentA;
                   a = parentB;
                   break;
                 }
@@ -1681,12 +1681,12 @@
                   if (_child === a) {
                     didFindChild = true;
                     a = parentB;
-                    b = parentA;
+                    b2 = parentA;
                     break;
                   }
-                  if (_child === b) {
+                  if (_child === b2) {
                     didFindChild = true;
-                    b = parentB;
+                    b2 = parentB;
                     a = parentA;
                     break;
                   }
@@ -1698,7 +1698,7 @@
                   );
               }
             }
-            if (a.alternate !== b)
+            if (a.alternate !== b2)
               throw Error(
                 "Return fibers should always be each others' alternates. This error is likely caused by a bug in React. Please file an issue."
               );
@@ -3436,7 +3436,7 @@
           node.textContent = text;
         }
         function camelize(string) {
-          return string.replace(hyphenPattern, function(_, character) {
+          return string.replace(hyphenPattern, function(_2, character) {
             return character.toUpperCase();
           });
         }
@@ -3851,8 +3851,8 @@
             }
           }
         }
-        function batchedUpdates$1(fn, a, b) {
-          if (isInsideEventHandler) return fn(a, b);
+        function batchedUpdates$1(fn, a, b2) {
+          if (isInsideEventHandler) return fn(a, b2);
           isInsideEventHandler = true;
           try {
             var JSCompiler_inline_result = fn(a);
@@ -19431,7 +19431,7 @@
           componentName = this.props.ref;
           return void 0 !== componentName ? componentName : null;
         }
-        function ReactElement2(type, key, self, source, owner, props, debugStack, debugTask) {
+        function ReactElement(type, key, self, source, owner, props, debugStack, debugTask) {
           self = props.ref;
           type = {
             $$typeof: REACT_ELEMENT_TYPE,
@@ -19487,8 +19487,8 @@
             else validateChildKeys(children);
           if (hasOwnProperty.call(config, "key")) {
             children = getComponentNameFromType(type);
-            var keys = Object.keys(config).filter(function(k) {
-              return "key" !== k;
+            var keys = Object.keys(config).filter(function(k2) {
+              return "key" !== k2;
             });
             isStaticChildren = 0 < keys.length ? "{key: someKey, " + keys.join(": ..., ") + ": ...}" : "{key: someKey}";
             didWarnAboutKeySpread[children + isStaticChildren] || (keys = 0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}", console.error(
@@ -19511,7 +19511,7 @@
             maybeKey,
             "function" === typeof type ? type.displayName || type.name || "Unknown" : type
           );
-          return ReactElement2(
+          return ReactElement(
             type,
             children,
             self,
@@ -19586,350 +19586,135 @@
     }
   });
 
-  // demo/src/index.tsx
+  // src/index.tsx
   var import_client = __toESM(require_client());
 
-  // src/Carouzef.tsx
-  var import_react2 = __toESM(require_react());
-
-  // src/utils.ts
+  // node_modules/react-carouzef/dist/index.esm.js
   var import_react = __toESM(require_react());
-  function incrementIndexSafe(value, count, max, modular) {
-    if (modular) {
-      return (max + value + count) % max;
-    }
-    return Math.max(Math.min(count + value, max - 1), 0);
-  }
-  function getIndexSafe(value, max, modular) {
-    if (!modular) return Math.min(max - 1, Math.max(0, value));
-    return (value + max) % max;
-  }
-  function indexDistance(value, target, max, modular) {
-    if (!modular) return value - target;
-    const distance = value - target;
-    const invDistance = distance > 0 ? distance - max : distance + max;
-    if (Math.abs(distance) < Math.abs(invDistance)) {
-      return distance;
-    }
-    return invDistance;
-  }
-  function filterChildren(children, filter) {
-    const out = { activeChilds: [], inactiveChilds: [] };
-    import_react.Children.forEach(children, (child) => {
-      if ((0, import_react.isValidElement)(child)) {
-        const { className } = child.props;
-        if (className?.includes(filter)) {
-          out.inactiveChilds.push(child);
-        } else {
-          out.activeChilds.push(child);
-        }
-      }
-    });
-    return out;
-  }
-  function duplicateChildren(children, itemsPerView) {
-    const count = import_react.Children.count(children);
-    if (!count) return [];
-    let childArray = import_react.Children.toArray(children);
-    const minItems = Math.max(itemsPerView * 2, 3);
-    while (childArray.length < minItems) {
-      childArray = [...childArray, ...childArray.slice(0, count)];
-    }
-    return childArray;
-  }
-  function getItemPosition(distance, perView) {
-    if (distance === 0) {
-      return "active" /* ACTIVE */;
-    }
-    if (distance === -1) {
-      return "prev" /* PREV */;
-    }
-    if (distance === 1) {
-      return "next" /* NEXT */;
-    }
-    if (Math.abs(distance) > perView / 2 + 1) {
-      return "hidden" /* HIDDEN */;
-    }
-    if (distance < 0) {
-      return "before" /* BEFORE */;
-    }
-    return "after" /* AFTER */;
-  }
-  function throttle(func, limit) {
-    let inThrottle = false;
-    return function(...args) {
-      const context = this;
-      if (!inThrottle) {
-        func.apply(context, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
-    };
-  }
-  function useNavigation({
-    onSwipeLeft,
-    onSwipeRight,
-    onSwipeUp,
-    onSwipeDown,
-    onKeysUp: keyboardNavigation,
-    swipeThreshold,
-    keyboardEventThrottle
-  }) {
-    const touchStart = (0, import_react.useRef)(null);
-    const touchEnd = (0, import_react.useRef)(null);
-    const threshold = swipeThreshold;
-    const onKeyUp = (ev) => {
-      for (let key in keyboardNavigation) {
-        if (ev.key == key) {
-          keyboardNavigation[key]();
-        }
-      }
-    };
-    (0, import_react.useEffect)(() => {
-      const handle = throttle(onKeyUp, keyboardEventThrottle);
-      window.addEventListener("keyup", handle);
-      return () => window.removeEventListener("keyup", handle);
-    }, []);
-    const onTouchStart = (e) => {
-      touchEnd.current = e.nativeEvent.targetTouches[0];
-      touchStart.current = e.nativeEvent.targetTouches[0];
-    };
-    const onTouchMove = (e) => touchEnd.current = e.nativeEvent.targetTouches[0];
-    const onTouchEnd = () => {
-      if (!touchStart.current || !touchEnd.current) return;
-      const distanceX = touchEnd.current.clientX - touchStart.current.clientX;
-      const distanceY = touchEnd.current.clientY - touchStart.current.clientY;
-      if (distanceX > threshold) {
-        onSwipeRight();
-      }
-      if (distanceX < -threshold) {
-        onSwipeLeft();
-      }
-      if (distanceY > threshold) {
-        onSwipeDown();
-      }
-      if (distanceY < -threshold) {
-        onSwipeUp();
-      }
-    };
-    return {
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd
-    };
-  }
-
-  // src/Carouzef.tsx
+  var import_react2 = __toESM(require_react());
   var import_jsx_runtime = __toESM(require_jsx_runtime());
-  var CarouzefContextComp = (0, import_react2.createContext)(null);
-  function useCarouzef() {
-    return (0, import_react2.useContext)(CarouzefContextComp);
+  function P(e, o, t, r) {
+    return r ? (t + e + o) % t : Math.max(Math.min(o + e, t - 1), 0);
   }
-  var ItemContextComp = (0, import_react2.createContext)(null);
-  function reducerFunction(prevState, { type, arg }) {
-    let index;
-    switch (type) {
-      case "increment_index" /* INCR */:
-        index = incrementIndexSafe(
-          prevState.index,
-          arg,
-          prevState.numberOfItems,
-          prevState.loop
-        );
-        return {
-          ...prevState,
-          index
-        };
-      case "set_index" /* SET */:
-        index = getIndexSafe(arg, prevState.numberOfItems, prevState.loop);
-        return {
-          ...prevState,
-          index
-        };
+  function g(e, o, t) {
+    return t ? (e + o) % o : Math.min(o - 1, Math.max(0, e));
+  }
+  function z(e, o, t, r) {
+    if (!r) return e - o;
+    let n = e - o, u = n > 0 ? n - t : n + t;
+    return Math.abs(n) < Math.abs(u) ? n : u;
+  }
+  function A(e, o) {
+    let t = { activeChilds: [], inactiveChilds: [] };
+    return import_react2.Children.forEach(e, (r) => {
+      if ((0, import_react2.isValidElement)(r)) {
+        let { className: n } = r.props;
+        n?.includes(o) ? t.inactiveChilds.push(r) : t.activeChilds.push(r);
+      }
+    }), t;
+  }
+  function N(e, o) {
+    let t = import_react2.Children.count(e);
+    if (!t) return [];
+    let r = import_react2.Children.toArray(e), n = Math.max(o * 2, 3);
+    for (; r.length < n; ) r = [...r, ...r.slice(0, t)];
+    return r;
+  }
+  function k(e, o) {
+    return e === 0 ? "active" : e === -1 ? "prev" : e === 1 ? "next" : Math.abs(e) > o / 2 + 1 ? "hidden" : e < 0 ? "before" : "after";
+  }
+  function $(e, o) {
+    let t = false;
+    return function(...r) {
+      let n = this;
+      t || (e.apply(n, r), t = true, setTimeout(() => t = false, o));
+    };
+  }
+  function O({ onSwipeLeft: e, onSwipeRight: o, onSwipeUp: t, onSwipeDown: r, onKeysUp: n, swipeThreshold: u, keyboardEventThrottle: p }) {
+    let l = (0, import_react2.useRef)(null), c = (0, import_react2.useRef)(null), m = u, a = (i) => {
+      for (let h in n) i.key == h && n[h]();
+    };
+    return (0, import_react2.useEffect)(() => {
+      let i = $(a, p);
+      return window.addEventListener("keyup", i), () => window.removeEventListener("keyup", i);
+    }, []), { onTouchStart: (i) => {
+      c.current = i.nativeEvent.targetTouches[0], l.current = i.nativeEvent.targetTouches[0];
+    }, onTouchMove: (i) => c.current = i.nativeEvent.targetTouches[0], onTouchEnd: () => {
+      if (!l.current || !c.current) return;
+      let i = c.current.clientX - l.current.clientX, h = c.current.clientY - l.current.clientY;
+      i > m && o(), i < -m && e(), h > m && r(), h < -m && t();
+    } };
+  }
+  var U = (0, import_react.createContext)(null);
+  function G() {
+    return (0, import_react.useContext)(U);
+  }
+  var K = (0, import_react.createContext)(null);
+  function J(e, { type: o, arg: t }) {
+    let r;
+    switch (o) {
+      case "increment_index":
+        return r = P(e.index, t, e.numberOfItems, e.loop), { ...e, index: r };
+      case "set_index":
+        return r = g(t, e.numberOfItems, e.loop), { ...e, index: r };
       default:
-        return prevState;
+        return e;
     }
   }
-  var defaultAutoPlayConfig = {
-    interval: 3e3,
-    step: 1
-  };
-  function Carouzef({
-    children,
-    startingItem = 0,
-    itemsPerView = 2,
-    loop = true,
-    autoPlay,
-    cssStyle,
-    changeItemOnClick = true,
-    swipeThreshold = 50,
-    keyboardEventThrottle = 500,
-    keyboardNavigation = { ArrowLeft: "previous", ArrowRight: "next" },
-    axis = "horizontal"
-  }) {
-    const [itemArray, activeChilds, inactiveChilds] = (0, import_react2.useMemo)(() => {
-      const { activeChilds: activeChilds2, inactiveChilds: inactiveChilds2 } = filterChildren(
-        children,
-        "carouzef-ignore"
-      );
-      return [
-        duplicateChildren(activeChilds2, itemsPerView),
-        activeChilds2,
-        inactiveChilds2
-      ];
-    }, [children, itemsPerView]);
-    const numberOfItems = import_react2.Children.count(itemArray);
-    const initialState = {
-      index: getIndexSafe(startingItem, numberOfItems, loop),
-      itemsPerView,
-      numberOfItems,
-      realNumberOfItems: activeChilds.length,
-      loop
-    };
-    const autoPlayConfig = { ...defaultAutoPlayConfig };
-    if (autoPlay) {
-      switch (typeof autoPlay) {
-        case "number":
-          autoPlayConfig.interval = autoPlay;
-          break;
-        case "boolean":
-          break;
-        default:
-          Object.assign(autoPlayConfig, autoPlay);
-      }
+  var Q = { interval: 3e3, step: 1 };
+  function de({ children: e, startingItem: o = 0, itemsPerView: t = 2, loop: r = true, autoPlay: n, cssStyle: u, changeItemOnClick: p = true, swipeThreshold: l = 50, keyboardEventThrottle: c = 500, keyboardNavigation: m = { ArrowLeft: "previous", ArrowRight: "next" }, axis: a = "horizontal" }) {
+    let [x, y, T] = (0, import_react.useMemo)(() => {
+      let { activeChilds: s, inactiveChilds: d } = A(e, "carouzef-ignore");
+      return [N(s, t), s, d];
+    }, [e, t]), i = import_react.Children.count(x), h = { index: g(o, i, r), itemsPerView: t, numberOfItems: i, realNumberOfItems: y.length, loop: r }, C = { ...Q };
+    if (n) switch (typeof n) {
+      case "number":
+        C.interval = n;
+        break;
+      case "boolean":
+        break;
+      default:
+        Object.assign(C, n);
     }
-    const style = {
-      "--items-per-view": itemsPerView,
-      ...cssStyle
-    };
-    console.log(style);
-    const setIndex = (0, import_react2.useCallback)(
-      (arg) => setValue({ type: "set_index" /* SET */, arg }),
-      []
-    );
-    const incrementIndex = (0, import_react2.useCallback)(
-      (arg) => setValue({ type: "increment_index" /* INCR */, arg }),
-      []
-    );
-    const [value, setValue] = (0, import_react2.useReducer)(reducerFunction, initialState);
-    const verticalAxis = axis == "vertical";
-    const onKeysUp = {};
-    for (let key in keyboardNavigation) {
-      if (keyboardNavigation[key] == "next") {
-        onKeysUp[key] = () => incrementIndex(1);
-      } else {
-        onKeysUp[key] = () => incrementIndex(-1);
-      }
-    }
-    const navigationHandles = useNavigation({
-      onSwipeLeft: !verticalAxis ? () => incrementIndex(1) : () => {
-      },
-      onSwipeRight: !verticalAxis ? () => incrementIndex(-1) : () => {
-      },
-      onSwipeUp: verticalAxis ? () => incrementIndex(1) : () => {
-      },
-      onSwipeDown: verticalAxis ? () => incrementIndex(-1) : () => {
-      },
-      onKeysUp,
-      swipeThreshold,
-      keyboardEventThrottle
-    });
-    (0, import_react2.useEffect)(() => {
-      const cleanUp = [() => {
+    let S = { "--items-per-view": t, ...u };
+    console.log(S);
+    let L = (0, import_react.useCallback)((s) => w({ type: "set_index", arg: s }), []), f = (0, import_react.useCallback)((s) => w({ type: "increment_index", arg: s }), []), [X, w] = (0, import_react.useReducer)(J, h), v = a == "vertical", I = {};
+    for (let s in m) m[s] == "next" ? I[s] = () => f(1) : I[s] = () => f(-1);
+    let H = O({ onSwipeLeft: v ? () => {
+    } : () => f(1), onSwipeRight: v ? () => {
+    } : () => f(-1), onSwipeUp: v ? () => f(1) : () => {
+    }, onSwipeDown: v ? () => f(-1) : () => {
+    }, onKeysUp: I, swipeThreshold: l, keyboardEventThrottle: c });
+    return (0, import_react.useEffect)(() => {
+      let s = [() => {
       }];
-      if (autoPlay && autoPlayConfig) {
-        const interval = setInterval(
-          () => incrementIndex(1),
-          autoPlayConfig.interval
-        );
-        cleanUp.push(() => {
-          clearInterval(interval);
+      if (n && C) {
+        let d = setInterval(() => f(1), C.interval);
+        s.push(() => {
+          clearInterval(d);
         });
       }
-      return () => cleanUp.forEach((e) => e());
-    }, [autoPlay]);
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { style, ...navigationHandles, className: "carousel-container", children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-      CarouzefContextComp.Provider,
-      {
-        value: {
-          setIndex,
-          incrementIndex,
-          ...value
-        },
-        children: [
-          import_react2.Children.map(itemArray, (child, id) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-            Item,
-            {
-              index: id,
-              changeItemOnClick,
-              axis,
-              children: child
-            },
-            id
-          )),
-          inactiveChilds
-        ]
-      }
-    ) });
+      return () => s.forEach((d) => d());
+    }, [n]), (0, import_jsx_runtime.jsx)("div", { style: S, ...H, className: "carousel-container", children: (0, import_jsx_runtime.jsxs)(U.Provider, { value: { setIndex: L, incrementIndex: f, ...X }, children: [import_react.Children.map(x, (s, d) => (0, import_jsx_runtime.jsx)(Z, { index: d, changeItemOnClick: p, axis: a, children: s }, d)), T] }) });
   }
-  function Item({ children, index, changeItemOnClick, axis }) {
-    const mainContext = useCarouzef();
-    if (!mainContext) return children;
-    const toActiveIndex = indexDistance(
-      index,
-      mainContext.index,
-      mainContext.numberOfItems,
-      mainContext.loop
-    );
-    const cssSize = {};
-    if (axis == "horizontal") {
-      cssSize["height"] = "auto";
-    } else {
-      cssSize["width"] = "auto";
+  function Z({ children: e, index: o, changeItemOnClick: t, axis: r }) {
+    let n = G();
+    if (!n) return e;
+    let u = z(o, n.index, n.numberOfItems, n.loop), p = {};
+    r == "horizontal" ? p.height = "auto" : p.width = "auto";
+    let l = { "--item-index": `${o}`, "--distance-to-active": `${u}`, ...p };
+    if ((0, import_react.isValidElement)(e)) {
+      let a = e.props.cssStyle;
+      a && Object.assign(l, a);
     }
-    const style = {
-      "--item-index": `${index}`,
-      "--distance-to-active": `${toActiveIndex}`,
-      ...cssSize
-    };
-    if ((0, import_react2.isValidElement)(children)) {
-      const childStyle = children.props.cssStyle;
-      if (childStyle) {
-        Object.assign(style, childStyle);
-      }
-    }
-    const position = getItemPosition(toActiveIndex, mainContext.itemsPerView);
-    const onClickCapture = (ev) => {
-      if (index != mainContext?.index) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        mainContext.setIndex(index);
-      }
-    };
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      "div",
-      {
-        onClickCapture: changeItemOnClick ? onClickCapture : () => {
-        },
-        className: `carousel-item carousel-item-${position}`,
-        style,
-        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          ItemContextComp.Provider,
-          {
-            value: {
-              index,
-              activeIndex: mainContext?.index,
-              toActiveIndex,
-              position
-            },
-            children
-          }
-        )
-      }
-    );
+    let c = k(u, n.itemsPerView);
+    return (0, import_jsx_runtime.jsx)("div", { onClickCapture: t ? (a) => {
+      o != n?.index && (a.stopPropagation(), a.preventDefault(), n.setIndex(o));
+    } : () => {
+    }, className: `carousel-item carousel-item-${c}`, style: l, children: (0, import_jsx_runtime.jsx)(K.Provider, { value: { index: o, activeIndex: n?.index, toActiveIndex: u, position: c }, children: e }) });
   }
 
-  // demo/src/index.tsx
+  // src/index.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime());
   function App() {
     const divStyle = {
@@ -19950,7 +19735,7 @@
           width: "100vw",
           height: "100vh"
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Carouzef, { itemsPerView: 3, children: [
+        children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(de, { itemsPerView: 3, autoPlay: true, cssStyle: { "--translateX": "100%", "--translateY": "0%" }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { ...divStyle, backgroundColor: "green" }, children: "1" }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { ...divStyle, backgroundColor: "blue" }, children: "2" }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { ...divStyle, backgroundColor: "orange" }, children: "3" }),

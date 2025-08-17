@@ -1,0 +1,18 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "bundle.js",
+  "scripts": {
+    "demo": "esbuild ./src/index.tsx --bundle --outfile=./bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "react-carouzef": "^1.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.9"
+  }
+}
