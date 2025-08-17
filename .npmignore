@@ -1,0 +1,10 @@
+src/
+demo/
+node_modules/
+tsconfig.json
+*.tsbuildinfo
+*.log
+*.md
+
+# Only include built files
+!dist/

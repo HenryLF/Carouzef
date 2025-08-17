@@ -2,9 +2,17 @@
   "name": "carouzef",
   "version": "1.0.0",
   "description": "A simple css oriented carousel component for React",
-  "main": "Carouzef.tsx",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./css": "./dist/css/*.css"
+  },
   "scripts": {
-    "build:demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js"
+    "build:demo": "esbuild demo/src/index.tsx --bundle --outfile=demo/bundle.js",
+    "build": "tsc &&  cpx src/**/*.{css} dist/",
+    "prepack": "npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +22,9 @@
   "devDependencies": {
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "cpx": "^1.5.0",
     "esbuild": "^0.25.9",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "typescript": "^5.9.2"
   }
 }
