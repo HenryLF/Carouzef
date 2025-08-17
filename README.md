@@ -25,7 +25,6 @@ yarn add react-carouzef
 
 ## Usage
 
-### Basic Implementation
 
 ```jsx
 import { Carouzef } from "react-carouzef";
@@ -66,20 +65,6 @@ function MyCarousel() {
 | `axis`                  | `"horizontal"` \| `"vertical"`       | `"horizontal"`                                  | Carousel and and swipe orientation (you should handle transformation in you css accordingly)                                                                |
 | `keyboardNavigation`    | `Record<string, "next"\|"previous">` | `{ ArrowLeft: "previous", ArrowRight: "next" }` | Keyboard mapping for navigation ([key reference](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values#numeric_keypad_keys)) |
 | `keyboardEventThrottle` | `number`                             | `500`                                           | Minimum time (ms) between keyboard events to prevent rapid navigation                                                                                       |
-
-### AutoPlay Configuration
-
-Configure automatic rotation using:
-
-- **Number**: Interval duration in milliseconds (`3000`)
-- **Object**:
-  ```ts
-  {
-    interval: number,  // Rotation interval (ms)
-    step?: number       // Items to advance per rotation (default: 1)
-  }Minimum swipe distance to trigger navigation |
-  ```
-
 ### AutoPlay Configuration
 
 When using the `autoPlay` prop:
@@ -134,9 +119,9 @@ enum ItemPosition {
 }
 ```
 
-## Styling Options
+# Styling Options
 
-### CSS Variable Customization
+## CSS Variable Customization
 
 The `cssStyle` prop allows you to override any CSS variable value for the main container. This enables dynamic, responsive animations that can adapt to different screen sizes or user interactions.
 
@@ -213,7 +198,7 @@ Alternatively you can import your own stylesheet, but if you're going to, you ma
 }
 ```
 
-## Ignoring Items
+# Ignoring Items
 
 Add items that shouldn't be part of the carousel flow by including the `carousel-ignore` class:
 
