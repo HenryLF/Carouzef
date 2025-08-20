@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import {
   Children,
@@ -101,10 +101,12 @@ export interface CarouzefProps extends PropsWithChildren {
 export interface AutoPlayConfig {
   interval: number;
   step?: number;
+  stopOnHover?: boolean;
 }
 const defaultAutoPlayConfig: AutoPlayConfig = {
   interval: 3000,
   step: 1,
+  stopOnHover: true,
 };
 
 export function Carouzef({
@@ -126,11 +128,11 @@ export function Carouzef({
       "carousel-ignore"
     );
     return [
-      duplicateChildren(activeChilds, itemsPerView),
+      loop ? duplicateChildren(activeChilds, itemsPerView) : activeChilds,
       activeChilds,
       inactiveChilds,
     ];
-  }, [children, itemsPerView]);
+  }, [children, itemsPerView, loop]);
 
   const numberOfItems = Children.count(itemArray);
   const initialState: CarouzefState = {
@@ -170,6 +172,8 @@ export function Carouzef({
 
   const [value, setValue] = useReducer(reducerFunction, initialState);
 
+  const hover = useRef(false);
+
   const verticalAxis = axis == "vertical";
   const onKeysUp: Record<string, () => void> = {};
   for (let key in keyboardNavigation) {
@@ -193,7 +197,7 @@ export function Carouzef({
     const cleanUp = [() => {}];
     if (autoPlay && autoPlayConfig) {
       const interval = setInterval(
-        () => incrementIndex(1),
+        () => {if(autoPlayConfig.step && !hover.current)  incrementIndex(1)},
         autoPlayConfig.interval
       );
       cleanUp.push(() => {
@@ -214,6 +218,8 @@ export function Carouzef({
         <div
           style={style}
           {...navigationHandles}
+          onMouseEnter={() => (hover.current = true)}
+          onMouseLeave={() => (hover.current = false)}
           className="carousel-container"
         >
           {Children.map(itemArray, (child, id) => (
