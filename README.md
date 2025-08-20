@@ -72,9 +72,11 @@ When using the `autoPlay` prop:
 - **Number**: Interval in milliseconds (e.g., `3000`)
 - **Object**:
   ```ts
-  {
-    interval: number, // Required
-    step?: number     // Optional (default: 1)
+  interface AutoPlayConfig {
+    interval: number;
+    step?: number; //default = 1
+    stopOnHover?: boolean; //default = true
+    reverse?: boolean; //default = false
   }
   ```
 - **Boolean**: `true` uses default interval of 3000ms

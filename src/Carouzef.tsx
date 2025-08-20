@@ -102,11 +102,13 @@ export interface AutoPlayConfig {
   interval: number;
   step?: number;
   stopOnHover?: boolean;
+  reverse?: boolean;
 }
 const defaultAutoPlayConfig: AutoPlayConfig = {
   interval: 3000,
   step: 1,
   stopOnHover: true,
+  reverse: false,
 };
 
 export function Carouzef({
@@ -196,10 +198,10 @@ export function Carouzef({
   useEffect(() => {
     const cleanUp = [() => {}];
     if (autoPlay && autoPlayConfig) {
-      const interval = setInterval(
-        () => {if(autoPlayConfig.step && !hover.current)  incrementIndex(1)},
-        autoPlayConfig.interval
-      );
+      const interval = setInterval(() => {
+        if (autoPlayConfig.step && !hover.current)
+          incrementIndex(autoPlayConfig.reverse ? -1 : 1);
+      }, autoPlayConfig.interval);
       cleanUp.push(() => {
         clearInterval(interval);
       });
