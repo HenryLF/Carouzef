@@ -24,7 +24,6 @@ import {
   useNavigation,
 } from "./utils";
 
-
 type CarouzefState = {
   index: number;
   numberOfItems: number;
@@ -204,7 +203,7 @@ export function Carouzef({
     return () => cleanUp.forEach((e) => e());
   }, [autoPlay]);
   return (
-    <div style={style} {...navigationHandles} className="carousel-container">
+    <div className="carousel-wrapper">
       <CarouzefContextComp.Provider
         value={{
           setIndex,
@@ -212,16 +211,22 @@ export function Carouzef({
           ...value,
         }}
       >
-        {Children.map(itemArray, (child, id) => (
-          <Item
-            key={id}
-            index={id}
-            changeItemOnClick={changeItemOnClick}
-            axis={axis}
-          >
-            {child}
-          </Item>
-        ))}
+        <div
+          style={style}
+          {...navigationHandles}
+          className="carousel-container"
+        >
+          {Children.map(itemArray, (child, id) => (
+            <Item
+              key={id}
+              index={id}
+              changeItemOnClick={changeItemOnClick}
+              axis={axis}
+            >
+              {child}
+            </Item>
+          ))}
+        </div>
         {inactiveChilds}
       </CarouzefContextComp.Provider>
     </div>
