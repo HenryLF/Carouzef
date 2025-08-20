@@ -25,7 +25,6 @@ yarn add react-carouzef
 
 ## Usage
 
-
 ```jsx
 import { Carouzef } from "react-carouzef";
 import "react-carouzef/base";
@@ -65,6 +64,7 @@ function MyCarousel() {
 | `axis`                  | `"horizontal"` \| `"vertical"`       | `"horizontal"`                                  | Carousel and and swipe orientation (you should handle transformation in you css accordingly)                                                                |
 | `keyboardNavigation`    | `Record<string, "next"\|"previous">` | `{ ArrowLeft: "previous", ArrowRight: "next" }` | Keyboard mapping for navigation ([key reference](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values#numeric_keypad_keys)) |
 | `keyboardEventThrottle` | `number`                             | `500`                                           | Minimum time (ms) between keyboard events to prevent rapid navigation                                                                                       |
+
 ### AutoPlay Configuration
 
 When using the `autoPlay` prop:
@@ -177,11 +177,21 @@ import "react-carouzef/base";
 Alternatively you can import your own stylesheet, but if you're going to, you may want to have a look at the content of `react-carouzef/base` :
 
 ```css
+.carousel-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .carousel-container {
   --items-per-view: 3; /*default value*/
   position: relative;
   overflow-x: hidden;
   overflow-y: clip;
+  width: 100%;
+  height: 100%;
+  flex: 1;
 }
 
 .carousel-item {
@@ -220,6 +230,7 @@ They can be imported using :
 import "react-carouzef/css/default";
 //Note that there is no .css extension.
 ```
+
 Some of them have CSS Variable you can interact with using the cssStyle props !
 
 ## react-carousef/css/default
