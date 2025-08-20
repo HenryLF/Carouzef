@@ -124,7 +124,7 @@ export function Carouzef({
   const [itemArray, activeChilds, inactiveChilds] = useMemo(() => {
     const { activeChilds, inactiveChilds } = filterChildren(
       children,
-      "carouzef-ignore"
+      "carousel-ignore"
     );
     return [
       duplicateChildren(activeChilds, itemsPerView),
