@@ -259,9 +259,9 @@ function Item({ children, index, changeItemOnClick, axis }: ItemProps) {
 
   const cssSize: Record<string, string> = {};
   if (axis == "horizontal") {
-    cssSize["height"] = "auto";
+    cssSize["height"] = "100%";
   } else {
-    cssSize["width"] = "auto";
+    cssSize["width"] = "100%";
   }
   const style = {
     "--item-index": `${index}`,
